@@ -1,4 +1,6 @@
 #include <QHash>
+#include <QJsonDocument>
+#include <QJsonArray>
 
 #include "qamqpmessage.h"
 #include "qamqpmessage_p.h"
@@ -63,6 +65,16 @@ bool QAmqpMessage::isRedelivered() const
     return d->redelivered;
 }
 
+bool QAmqpMessage::isReceived() const
+{
+	return d->received;
+}
+
+void QAmqpMessage::setReceived(bool received)
+{
+	d->received = received;
+}
+
 QString QAmqpMessage::exchangeName() const
 {
     return d->exchangeName;
@@ -76,6 +88,26 @@ QString QAmqpMessage::routingKey() const
 QByteArray QAmqpMessage::payload() const
 {
     return d->payload;
+}
+
+bool QAmqpMessage::isJson() const
+{
+	return (hasProperty(ContentType) && property(ContentType).toString() == "application/json");
+}
+
+QJsonObject QAmqpMessage::toJson() const
+{
+	return QJsonDocument::fromJson(d->payload).object();
+}
+
+QJsonArray QAmqpMessage::toJsonArray() const
+{
+	return QJsonDocument::fromJson(d->payload).array();
+}
+
+QString QAmqpMessage::toString() const
+{
+	return d->payload;
 }
 
 bool QAmqpMessage::hasProperty(Property property) const

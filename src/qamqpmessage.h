@@ -22,6 +22,7 @@
 #include <QHash>
 #include <QSharedDataPointer>
 #include <QVariant>
+#include <QJsonObject>
 
 #include "qamqpglobal.h"
 
@@ -68,10 +69,16 @@ public:
     QHash<QString, QVariant> headers() const;
 
     bool isValid() const;
+	bool isReceived() const;
     bool isRedelivered() const;
     qlonglong deliveryTag() const;
     QString exchangeName() const;
     QString routingKey() const;
+	bool isJson() const;
+	QString toString() const;
+	QJsonObject toJson() const;
+	QJsonArray toJsonArray() const;
+	void setReceived(bool=true);
     QByteArray payload() const;
 
 private:

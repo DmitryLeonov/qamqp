@@ -138,6 +138,8 @@ void QAmqpClientPrivate::parseConnectionString(const QString &uri)
     if (vhost.startsWith("/") && vhost.size() > 1)
         vhost = vhost.mid(1);
     virtualHost = vhost;
+	if(virtualHost.isEmpty())
+		virtualHost = "/";
     setPassword(connectionString.password());
     setUsername(connectionString.userName());
 }
@@ -536,11 +538,7 @@ void QAmqpClientPrivate::startOk()
     clientProperties["version"] = QString(QAMQP_VERSION);
     clientProperties["platform"] = QString("Qt %1").arg(qVersion());
     clientProperties["product"] = QString("QAMQP");
-#if QT_VERSION >= 0x060000
-    clientProperties.insert(customProperties);
-#else
-    clientProperties.unite(customProperties);
-#endif
+	clientProperties.insert(customProperties);
     stream << clientProperties;
 
     authenticator->write(stream);
@@ -911,11 +909,6 @@ void QAmqpClient::setSslConfiguration(const QSslConfiguration &config)
         d->port = AMQP_SSL_PORT;
         d->socket->setSslConfiguration(config);
     }
-}
-
-QString QAmqpClient::gitVersion()
-{
-    return QString(GIT_VERSION);
 }
 
 void QAmqpClient::ignoreSslErrors(const QList<QSslError> &errors)

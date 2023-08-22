@@ -14,6 +14,7 @@ public:
 
     qlonglong deliveryTag;
     bool redelivered;
+	bool received = false;
     QString exchangeName;
     QString routingKey;
     QByteArray payload;
